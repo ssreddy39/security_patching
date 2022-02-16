@@ -1,0 +1,8 @@
+---
+# tasks file for security_patching
+- name: List the security updates 
+  shell: "yum updateinfo list security --exclude=kernel* | grep ALAS | awk {'print $NF'}"
+  register: yumupdate_info
+
+- debug:
+    var: yumupdate_info.stdout
