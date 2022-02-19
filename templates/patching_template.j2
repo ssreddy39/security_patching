@@ -1,0 +1,19 @@
+Ansible pre-post patching checks:
+
+Security_patch_list:
+{{yumupdate_info.stdout_lines}}
+
+apache_status:
+  pre: {{pre_httpd_status.status.ActiveState}}
+  post: {{post_httpd_status.status.ActiveState}}
+
+apache_port_status:
+  pre: {{pre_listen_ports_facts.stdout}}
+  post: {{post_listen_ports_facts.stdout}}
+
+yum update summary:
+{% for line in package_install.stdout_lines %}
+  {{line}}
+{% endfor %}
+
+

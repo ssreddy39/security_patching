@@ -5,4 +5,32 @@
   register: yumupdate_info
 
 - debug:
-    var: yumupdate_info.stdout
+    var: yumupdate_info.stdout_lines
+
+- name: check the httpd service 
+  service: 
+    name: httpd
+  register: pre_httpd_status 
+
+- name: get the port status 
+  shell: "netstat -lntpua | grep httpd | awk '{print $6}'"
+  register: pre_listen_ports_facts
+
+- name: Implement the security patch
+  shell: "yum update-minimal --security -y"
+  register: package_install
+
+- name: validate the apache status post patching
+  service: 
+    name: httpd
+  register: post_httpd_status
+
+- name: get the port status
+  shell: "netstat -lntpua | grep httpd | awk '{print $6}'"
+  register: post_listen_ports_facts
+
+- name: create patch summary
+  template:
+    src: patching_template.j2
+    dest: /var/tmp/patching_info
+

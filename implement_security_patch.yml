@@ -2,6 +2,5 @@
 - hosts: all 
   become: yes 
   gather_facts: no 
-  tasks: 
-  - name: Include the main role 
-    include_role: security_patching
+  roles:
+    - role: security_patching
